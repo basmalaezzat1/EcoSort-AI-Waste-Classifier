@@ -1,0 +1,14 @@
+{
+    "basmala": {
+        "password": "123",
+        "points": 70,
+        "items": 3,
+        "co2": 290.0
+    },
+    "remas": {
+        "password": "5588",
+        "points": 0,
+        "items": 0,
+        "co2": 0.0
+    }
+}
