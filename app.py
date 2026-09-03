@@ -6,7 +6,6 @@ from PIL import Image
 import json
 import os
 
-# 1. إعدادات الصفحة
 st.set_page_config(
     page_title="EcoSort - AI Waste Classifier & Rewards",
     page_icon="♻️",
@@ -14,7 +13,6 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# 2. تصميم CSS عصري واحترافي
 st.markdown("""
     <style>
     .main { background-color: #f8f9fa; }
@@ -25,23 +23,17 @@ st.markdown("""
         box-shadow: 0 4px 6px rgba(40, 167, 69, 0.2);
     }
     .prediction-card {
-        padding: 20px; border-radius: 15px; background-color: white;
+        padding: 15px; border-radius: 12px; background-color: white;
         box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: center;
-        border-left: 6px solid #28a745;
+        border-left: 6px solid #28a745; margin-bottom: 15px;
     }
     .rank-card {
         padding: 12px; border-radius: 10px; background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
         border: 2px solid #81c784; text-align: center; margin-bottom: 15px;
     }
-    .auth-container {
-        max-width: 450px; margin: 0 auto; padding: 30px;
-        background: white; border-radius: 20px;
-        box-shadow: 0 8px 25px rgba(0,0,0,0.08);
-    }
     </style>
 """, unsafe_allow_html=True)
 
-# 3. إدارة الملف المحلي للحسابات
 DB_FILE = "users_db.json"
 
 def load_database():
@@ -57,7 +49,6 @@ def save_database(db):
     with open(DB_FILE, "w", encoding="utf-8") as f:
         json.dump(db, f, ensure_ascii=False, indent=4)
 
-# 4. تحميل الموديل
 @st.cache_resource
 def load_model():
     model = tf.keras.models.load_model("waste_classifier_model.h5")
@@ -90,10 +81,8 @@ db = load_database()
 if 'logged_in_user' not in st.session_state:
     st.session_state.logged_in_user = None
 
-# 5. صفحة تسجيل الدخول / إنشاء الحساب المنفصلة في منتصف الشاشة
 if st.session_state.logged_in_user is None:
     st.markdown("<br><br>", unsafe_allow_html=True)
-    
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
         st.markdown("<h1 style='text-align: center; color: #28a745;'>♻️ EcoSort</h1>", unsafe_allow_html=True)
@@ -106,7 +95,6 @@ if st.session_state.logged_in_user is None:
             login_user = st.text_input("اسم المستخدم", key="login_user")
             login_pass = st.text_input("كلمة المرور", type="password", key="login_pass")
             st.markdown("<br>", unsafe_allow_html=True)
-            
             if st.button("تسجيل الدخول"):
                 if login_user in db and db[login_user]["password"] == login_pass:
                     st.session_state.logged_in_user = login_user
@@ -119,21 +107,18 @@ if st.session_state.logged_in_user is None:
             new_user = st.text_input("اختر اسم مستخدم جديد", key="new_user")
             new_pass = st.text_input("اختر كلمة المرور", type="password", key="new_pass")
             st.markdown("<br>", unsafe_allow_html=True)
-            
             if st.button("إنشاء الحساب الان"):
                 if new_user and new_pass:
                     if new_user in db:
-                        st.error("⚠️ اسم المستخدم موجود مسبقاً، اختر اسمآ آخر.")
+                        st.error("⚠️ اسم المستخدم موجود مسبقاً، اختر اسماً آخر.")
                     else:
                         db[new_user] = {"password": new_pass, "points": 0, "items": 0, "co2": 0.0}
                         save_database(db)
                         st.success("🎉 تم إنشاء الحساب بنجاح! انتقل لتبويب تسجيل الدخول.")
                 else:
                     st.warning("⚠️ برجاء ملء جميع الخانات المطلوبة.")
-    
     st.stop()
 
-# 6. القائمة الجانبية بعد تسجيل الدخول (لعرض الإحصائيات والرتبة فقط)
 current_user = st.session_state.logged_in_user
 user_data = db[current_user]
 rank_title, rank_msg = get_user_rank(user_data["points"])
@@ -147,7 +132,6 @@ if st.sidebar.button("🚪 تسجيل الخروج"):
 
 st.sidebar.markdown("---")
 st.sidebar.title("لوحة الأثر البيئي 🌍")
-
 st.sidebar.markdown(f"""
     <div class="rank-card">
         <h4 style='color: #2e7d32; margin: 0;'>{rank_title}</h4>
@@ -159,7 +143,6 @@ st.sidebar.metric(label="🏆 إجمالي النقاط", value=f"{user_data['po
 st.sidebar.metric(label="♻️ القطع المُعاد تدويرها", value=f"{user_data['items']} قطعة")
 st.sidebar.metric(label="💨 غاز CO2 المُوفر", value=f"{user_data['co2']:.1f} جرام")
 
-# 7. الواجهة الرئيسية للتطبيق
 st.title(f"♻️ EcoSort: مرحباً بك يا {current_user}")
 st.markdown("ارفع صورة للمخلفات من جهازك، دع الذكاء الاصطناعي يفحصها، واجمع نقاطك البيئية! 🌱")
 st.markdown("---")
@@ -175,8 +158,8 @@ if uploaded_file is not None:
         st.image(image_obj, use_container_width=True)
     
     with col2:
-        st.markdown("### 🔍 نتيجة التحليل الذكي")
-        with st.spinner("🤖 جاري تحليل الصورة وتصنيف المادة..."):
+        st.markdown("### 🔍 نتائج الفحص البيئي")
+        with st.spinner("🤖 جاري فحص الصورة وتحديد نوع النفايات..."):
             img = image_obj.convert('RGB').resize((224, 224))
             img_array = image.img_to_array(img)
             img_array = np.expand_dims(img_array, axis=0)
@@ -184,19 +167,13 @@ if uploaded_file is not None:
             predictions = model.predict(img_array)
             predicted_class_idx = np.argmax(predictions[0])
             predicted_class = class_names[predicted_class_idx]
-            
-            scores = tf.nn.softmax(predictions[0])
-            confidence = float(100 * np.max(scores))
-            
+        
+        # عرض اسم النتيجة فقط بدون نسبة الثقة أو شريط التقدم
         st.markdown(f"""
             <div class="prediction-card">
-                <h2 style='color: #28a745; margin: 0;'>{predicted_class}</h2>
-                <p style='font-size: 16px; color: #555; margin-top: 5px;'>فئة النفايات المتوقعة</p>
+                <h3 style='color: #28a745; margin: 0;'>النوع المكتشف: {predicted_class}</h3>
             </div>
         """, unsafe_allow_html=True)
-        
-        st.markdown(f"**نسبة الثقة (Confidence): {confidence:.2f}%**")
-        st.progress(int(min(confidence, 100)))
         
         st.info(f"**نصيحة بيئية:** {recycling_tips.get(predicted_class, 'حافظ على نظافة بيئتك!')}")
         
