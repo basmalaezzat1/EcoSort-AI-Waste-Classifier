@@ -45,6 +45,7 @@ As captured in the application preview, the **Streamlit UI** is organized into c
 
 
 # Project Directory Structure
+```text
 waste/
 │
 ├── app.py                   # Streamlit web application interface & UI logic
