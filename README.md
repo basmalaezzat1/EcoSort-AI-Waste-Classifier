@@ -1,1 +1,0 @@
-# EcoSort-AI-Waste-Classifier
