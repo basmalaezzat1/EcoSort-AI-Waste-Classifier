@@ -1,4 +1,4 @@
- EcoSort: Smart AI Waste Classifier & Rewards Platform
+# EcoSort: Smart AI Waste Classifier & Rewards Platform
 EcoSort is an intelligent web application designed to bridge the gap between artificial intelligence and environmental sustainability. It leverages computer vision to automatically classify everyday waste items, educate users with tailored recycling tips, and gamify the recycling process through an interactive rewards and eco-impact tracking system.
 
 # Project Overview & Problem Statement
@@ -44,7 +44,7 @@ As captured in the application preview, the **Streamlit UI** is organized into c
    * **Interactive Reward Confirmation:** A gradient action button (`♻️ تأكيد إعادة التدوير وكسب النقاط`) that credits user points, updates item counters, triggers celebratory animations (`st.balloons()`), and refreshes the metrics instantly.
 
 
-## 📂 Project Directory Structure
+# Project Directory Structure
 waste/
 │
 ├── app.py                   # Streamlit web application interface & UI logic
